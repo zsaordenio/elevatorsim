@@ -5,12 +5,14 @@ import java.awt.event.MouseListener;
 
 public class FloorButton extends JButton implements MouseListener {
     private int floor; // up = true, down = false;
+    private boolean selected;
     private int elevator;
 
     public FloorButton(int floor, int elevator) {
         //Initializes floor variable and visuals
         this.floor = floor;
         this.elevator = elevator;
+        this.selected = false;
         setBackground(Color.black);
         setForeground(Color.white);
         if (floor < 10) setText("0" + floor);
@@ -23,6 +25,8 @@ public class FloorButton extends JButton implements MouseListener {
 
     public void mouseReleased(MouseEvent e) {
         Simulation.triggerHighlight(floor, elevator);
+        Simulation.getElevator(elevator).setBusy(true);
+        selected = true;
     }
 
     public void mouseEntered(MouseEvent e) {
@@ -34,4 +38,11 @@ public class FloorButton extends JButton implements MouseListener {
     public void mousePressed(MouseEvent e) {
     }
 
+    public int getFloor() {
+        return floor;
+    }
+
+    public boolean isSelected(){
+        return selected;
+    }
 }

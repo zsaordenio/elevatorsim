@@ -15,6 +15,8 @@ public class Elevator extends JPanel {
     private int currentFloor;
     private int destination;
     private boolean direction;
+    private boolean busy;
+    private int pauseSeconds;
 
     private Floor[] floors;
     private FloorButtonPanel[] floorButtonPanels;
@@ -23,12 +25,20 @@ public class Elevator extends JPanel {
         return currentFloor;
     }
 
-    public int getDestination() {
-        return destination;
-    }
-
     public boolean getDirection() {
         return direction;
+    }
+
+    public boolean isBusy() {
+        return busy;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
+    }
+
+    public void setDirection(boolean direction) {
+        this.direction = direction;
     }
 
     public FloorButtonPanel[] getFloorButtonPanels() {
@@ -54,7 +64,6 @@ public class Elevator extends JPanel {
     }
 
     private void initFields(int number) {
-        this.direction = true;
         //Initialize the floor number
         this.number = number;
         //Initialize the arrays
@@ -97,7 +106,7 @@ public class Elevator extends JPanel {
                 gbc.gridy = j + 2;
                 //Add the floorButton to the floorButton array
                 int floorNumber = i * (NUMFLOOR / 4) + j;
-                FloorButton fb = new FloorButton(floorNumber+1, number);
+                FloorButton fb = new FloorButton(floorNumber + 1, number);
                 FloorButtonPanel fbp = new FloorButtonPanel(fb);
                 GridBagConstraints gbc2 = new GridBagConstraints();
                 gbc2.insets = new Insets(2, 2, 2, 2);
@@ -134,13 +143,12 @@ public class Elevator extends JPanel {
     }
 
     public void initTimerTask() {
-        currentFloor = 15;
         direction = true;
-        destination = 1;
+        pauseSeconds = 3;
+        currentFloor = 1;
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             public void run() {
-                System.out.println(number);
                 updateElevator();
             }
         };
@@ -148,13 +156,40 @@ public class Elevator extends JPanel {
     }
 
     private void updateElevator() {
-        floors[currentFloor].setBorder(new JButton().getBorder());
-        if (direction) {
-            currentFloor--;
-        } else {
-            currentFloor++;
+        if (pauseSeconds != 3) {
+            pauseSeconds++;
+            return;
         }
-        floors[currentFloor].setBorder(new LineBorder(Color.black, 5));
+        if (busy) {
+            floors[16 - currentFloor].setBorder(new JButton().getBorder());
+            if (direction) {
+                currentFloor++;
+            } else {
+                currentFloor--;
+            }
+            floors[16 - currentFloor].setBorder(new LineBorder(Color.black, 5));
+
+            if (floorButtonPanels[currentFloor - 1].getFloorButton().isSelected()) {
+                pauseSeconds = 0;
+                System.out.println("PAUSE");
+            }
+
+            if (direction) {
+                if (floors[16 - currentFloor].getDirectionButtonPanel(true).getDirectionButton().isSelected()) {
+                    pauseSeconds = 0;
+                    System.out.println("PAUSE");
+                }
+            } else {
+                if (floors[16 - currentFloor].getDirectionButtonPanel(false).getDirectionButton().isSelected()) {
+                    pauseSeconds = 0;
+                    System.out.println("PAUSE");
+                }
+            }
+
+            if (currentFloor == destination) {
+                busy = false;
+            }
+        }
     }
 }
 

@@ -10,12 +10,14 @@ public class DirectionButton extends JButton implements MouseListener {
     private int elevator;
     private boolean direction;
     private int floor;
+    private boolean selected;
 
     public DirectionButton(int floor, boolean direction) {
         //Initializes direction variable and visuals
         this.floor = floor;
         this.direction = direction;
         this.elevator = elevator;
+        this.selected = false;
         setBackground(Color.black);
         setForeground(Color.white);
         if (direction == UP) {
@@ -33,6 +35,7 @@ public class DirectionButton extends JButton implements MouseListener {
 
     public void mouseReleased(MouseEvent e) {
         Simulation.triggerHighlight(floor, direction);
+        this.selected = true;
     }
 
     public void mouseEntered(MouseEvent e) {

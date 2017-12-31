@@ -9,6 +9,9 @@ public class DirectionButtonPanel extends JPanel {
         this.setLayout(new GridBagLayout());
     }
 
+    public DirectionButton getDirectionButton() {
+        return directionButton;
+    }
 
     public void highLight() {
         this.setBackground(Color.green);

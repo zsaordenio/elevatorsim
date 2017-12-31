@@ -17,4 +17,7 @@ public class FloorButtonPanel extends JPanel {
         this.setBackground(null);
     }
 
+    public FloorButton getFloorButton() {
+        return floorButton;
+    }
 }

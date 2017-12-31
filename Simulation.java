@@ -75,4 +75,7 @@ public class Simulation {
         elevators[elevator - 1].getFloorButtonPanels()[floor - 1].highLight();
     }
 
+    public static Elevator getElevator(int elevator) {
+        return elevators[elevator-1];
+    }
 }
